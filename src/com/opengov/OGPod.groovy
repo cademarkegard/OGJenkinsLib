@@ -1,31 +1,25 @@
 package com.opengov
 
 import com.opengov.OGContainer
+import com.opengov.OGConstants
 
 class OGPod {
-  String name
-  String label
-  List<OGContainer> ogContainers
-  List volumes
-
-  OGPod(String name, String label, List<OGContainer> ogContainers = [], List volumes = []) {
-    this.name = name
-    this.label = label
-    this.ogContainers = ogContainers
-    this.volumes = volumes
-  }
-
-  def run(closure) {
-    def containerTemplates = this.ogContainers.collect { ogContainer ->
-      containerTemplate(ogContainer.getName(), "${ogContainer.getImage()}:${ogContainer.getTag()}", ttyEnabled: true, command: 'cat')
+  static def run(script, String templateName, String templateLabel, String nodeName, List<OGContainer> containers = [], List volumes = [], closure) {
+    def sidecarContainers = [:]
+    def containerTemplates = []
+    containers.each {
+      containerTemplates << it.getContainerTemplate()
+      sidecarContainers[it.getName()] = it
     }
 
-    def volumeTemplates = [
-      hostPathVolume(hostPath: '/var/run/docker.sock', mountPath: '/var/run/docker.sock')
-    ] + this.volumes
+    def volumeTemplates = volumes.collect {
+      script.hostPathVolume(hostPath: it.hostPath, mountPath: it.mountPath)
+    }
 
-    podTemplate(label: this.label, containers: containers, volumes: volumes) {
-      node(this.label, closure)
+    script.podTemplate(label: templateLabel, containers: containerTemplates, volumes: volumeTemplates) {
+      script.node(nodeName) {
+        closure(sidecarContainers)
+      }
     }
   }
 }
