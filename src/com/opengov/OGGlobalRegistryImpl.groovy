@@ -10,17 +10,23 @@ class OGGlobalRegistryImpl extends OGRegistry {
     super(script, OGConstants.DOCKERHUB_REGISTRY_HOSTNAME)
   }
 
-  @NonCPS
   def push(image, tag) {
     this.script.docker.withRegistry(this.registryHostname, OGConstants.DOCKERHUB_CREDENTIALS_ID) {
-      this.script.sh "docker push '${OGConstants.DOCKERHUB_ORGANIZATION}/${image}:${tag}'"
+      this.script.sh "docker push '${image}:${tag}'"
     }
   }
 
-  @NonCPS
+  def pushOGImage(image, tag) {
+    this.push("${OGConstants.DOCKERHUB_ORGANIZATION}/${image}", tag)
+  }
+
   def pull(image, tag) {
     this.script.docker.withRegistry(this.registryHostname, OGConstants.DOCKERHUB_CREDENTIALS_ID) {
-      this.script.sh "docker pull '${OGConstants.DOCKERHUB_ORGANIZATION}/${image}:${tag}'"
+      this.script.sh "docker pull '${image}:${tag}'"
     }
+  }
+
+  def pullOGImage(image, tag) {
+    this.pull("${OGConstants.DOCKERHUB_ORGANIZATION}/${image}", tag)
   }
 }
