@@ -33,7 +33,7 @@ import com.opengov.OGGlobalRegistryImpl
 
 def pull(image, tag) {
   milestone()
-  lock("${image}-${env.JOB_NAME}-global-registry") {
+  lock("${env.JOB_NAME}-global-registry") {
     new OGDockerContainerImpl(this, 'docker').run {
       def globalRegistry = new OGGlobalRegistryImpl(this)
       globalRegistry.pull(image, tag)

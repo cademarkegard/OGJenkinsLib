@@ -14,7 +14,7 @@ def call(List<OGContainer> containers = [], List volumes = [], closure) {
   ]
 
   def allVolumes = volumes + [[hostPath: OGConstants.DOCKER_SOCK_PATH, mountPath: OGConstants.DOCKER_SOCK_PATH]]
-  def name = "agentPod-${env.JOB_NAME}-${UUID.randomUUID().toString().substring(0,8)}"
+  def name = "agentPod-${env.JOB_NAME}-${UUID.randomUUID().toString().substring(0,8)}".replace('/', '-')
 
   OGPod.run(this, 'agentPod', name, name, allContainers, allVolumes, closure)
 }
