@@ -13,6 +13,8 @@ def call(List<OGContainer> containers = [], List volumes = [], closure) {
     new OGAgentContainerImpl(this)
   ]
 
+  echo allContainers.toString()
+
   def allVolumes = volumes + [[hostPath: OGConstants.DOCKER_SOCK_PATH, mountPath: OGConstants.DOCKER_SOCK_PATH]]
 
   OGPod.run(this, 'agentPod', 'agentPod', 'agentPod', allContainers, allVolumes, closure)
