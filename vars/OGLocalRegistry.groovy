@@ -11,7 +11,7 @@ def call() {
 
   def registryAction = { action, image, tag ->
     milestone()
-    lock("${image}-${env.JOB_NAME}-local-registry") {
+    lock("${env.JOB_NAME}-local-registry") {
       new OGDockerContainerImpl(this, 'docker').run {
         def registryIp = retry(10) {
           InetAddress.getByName(env.LOCAL_DOCKER_REGISTRY_HOST)

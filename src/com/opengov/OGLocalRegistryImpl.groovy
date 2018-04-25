@@ -14,13 +14,20 @@ class OGLocalRegistryImpl extends OGRegistry {
     this.registryPort = registryPort
   }
 
-  @NonCPS
   def push(image, tag) {
+    this.script.sh("docker tag ${image}:${tag} ${this.registryHostname}:${this.registryPort}/${image}:${tag}")
     this.script.sh("docker push ${this.registryHostname}:${this.registryPort}/${image}:${tag}")
   }
 
-  @NonCPS
+  def pushOGImage(image, tag) {
+    this.push("${OGConstants.DOCKERHUB_ORGANIZATION}/${image}", tag)
+  }
+
   def pull(image, tag) {
     this.script.sh("docker pull ${this.registryHostname}:${this.registryPort}/${image}:${tag}")
+  }
+
+  def pullOGImage(image, tag) {
+    this.pull("${OGConstants.DOCKERHUB_ORGANIZATION}/${image}", tag)
   }
 }
