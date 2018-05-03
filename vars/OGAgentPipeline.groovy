@@ -38,6 +38,5 @@ def call(List<OGContainer> containers = [], List volumes = [], closure) {
         - name: docker-graph-storage
           emptyDir: {}
   """
-
-  OGPod.run(this, 'agentPod', name, name, allContainers, allVolumes, yaml, closure)
+  OGPod.runYAML(this, name, name, yaml, closure)
 }
