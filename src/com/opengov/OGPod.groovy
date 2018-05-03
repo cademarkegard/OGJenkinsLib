@@ -4,7 +4,7 @@ import com.opengov.OGContainer
 import com.opengov.OGConstants
 
 class OGPod {
-  static def run(script, String templateName, String templateLabel, String nodeName, List<OGContainer> containers = [], List volumes = [], closure) {
+  static def run(script, String templateName, String templateLabel, String nodeName, List<OGContainer> containers = [], List volumes = [], String yaml = '', closure) {
     def sidecarContainers = [:]
     def containerTemplates = []
     containers.each {
@@ -16,7 +16,7 @@ class OGPod {
       script.hostPathVolume(hostPath: it.hostPath, mountPath: it.mountPath)
     }
 
-    script.podTemplate(label: templateLabel, containers: containerTemplates, volumes: volumeTemplates) {
+    script.podTemplate(label: templateLabel, containers: containerTemplates, volumes: volumeTemplates, yaml: yaml) {
       script.node(nodeName) {
         closure(sidecarContainers)
       }
