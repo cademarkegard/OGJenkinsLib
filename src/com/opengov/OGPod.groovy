@@ -25,8 +25,8 @@ class OGPod {
 
   static def runYAML(script, String templateLabel, String nodeName, String yaml, closure) {
   def containers = [
-    script.containerTemplate(name: 'docker', image: 'docker:17.09', command: 'cat', envVars: [script.envVar(key: 'DOCKER_HOST', value: 'tcp://localhost:2375')]),
-    script.containerTemplate(name: 'dind-daemon', image: 'docker:17.09-dind', privileged: true)
+    script.containerTemplate(name: 'docker', image: 'docker:17.09', command: 'cat', ttyEnabled: true, envVars: [script.envVar(key: 'DOCKER_HOST', value: 'tcp://localhost:2375')]),
+    script.containerTemplate(name: 'dind-daemon', image: 'docker:17.09-dind', ttyEnabled: true, privileged: true)
   ]
 
   script.podTemplate(label: templateLabel, containers: containers, volumes: [script.emptyDirVolume(mountPath: '/var/lib/docker', memory: false)]) {
