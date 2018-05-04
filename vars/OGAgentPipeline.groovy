@@ -21,6 +21,7 @@ def call(List<OGContainer> containers = [], List volumes = [], closure) {
   kind: Pod
   metadata:
       name: ${name}
+      label: ${name}
   spec:
       containers:
         - name: docker
