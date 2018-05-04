@@ -24,23 +24,29 @@ class OGPod {
   }
 
   static def runYAML(script, String templateLabel, String nodeName, String yaml, closure) {
-  def containers = [
-    script.containerTemplate(name: 'docker', image: 'docker:17.09', command: 'cat', ttyEnabled: true, envVars: [script.envVar(key: 'DOCKER_HOST', value: 'tcp://localhost:2375')],
-                                  resourceRequestCpu: '750',
-                                  resourceLimitCpu: '750',
-                                  resourceRequestMemory: '0.5G',
-                                  resourceLimitMemory: '0.5G'),
-    script.containerTemplate(name: 'dind-daemon', image: 'docker:17.09-dind', ttyEnabled: true, privileged: true,
-                                  resourceRequestCpu: '750',
-                                  resourceLimitCpu: '750',
-                                  resourceRequestMemory: '3G',
-                                  resourceLimitMemory: '3G')
-  ]
-
-  script.podTemplate(label: templateLabel, containers: containers, volumes: [script.emptyDirVolume(mountPath: '/var/lib/docker', memory: false)]) {
+    script.podTemplate(label: templateLabel, inheritFrom: 'default') {
       script.node(nodeName) {
         closure()
       }
     }
+
+    // def containers = [
+    //   script.containerTemplate(name: 'docker', image: 'docker:17.09', command: 'cat', ttyEnabled: true, envVars: [script.envVar(key: 'DOCKER_HOST', value: 'tcp://localhost:2375')],
+    //                                 resourceRequestCpu: '750',
+    //                                 resourceLimitCpu: '750',
+    //                                 resourceRequestMemory: '0.5G',
+    //                                 resourceLimitMemory: '0.5G'),
+    //   script.containerTemplate(name: 'dind-daemon', image: 'docker:17.09-dind', ttyEnabled: true, privileged: true,
+    //                                 resourceRequestCpu: '750',
+    //                                 resourceLimitCpu: '750',
+    //                                 resourceRequestMemory: '3G',
+    //                                 resourceLimitMemory: '3G')
+    // ]
+
+    // script.podTemplate(label: templateLabel, containers: containers, volumes: [script.emptyDirVolume(mountPath: '/var/lib/docker', memory: false)]) {
+    //     script.node(nodeName) {
+    //       closure()
+    //     }
+    //   }
   }
 }
