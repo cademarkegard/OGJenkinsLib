@@ -19,6 +19,8 @@ def call(List<OGContainer> containers = [], List volumes = [], closure) {
   def yaml = """
   apiVersion: v1
   kind: Pod
+  metadata:
+      name: ${name}
   spec:
       containers:
         - name: docker

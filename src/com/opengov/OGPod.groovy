@@ -24,7 +24,7 @@ class OGPod {
   }
 
   static def runYAML(script, String templateLabel, String nodeName, String yaml, closure) {
-    script.podTemplate(label: templateLabel, yaml: yaml) {
+    script.podTemplate(yaml: yaml) {
       script.node(nodeName) {
         closure()
       }
