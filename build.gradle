@@ -1,0 +1,27 @@
+apply plugin: 'groovy'
+apply plugin: 'codenarc'
+
+repositories {
+    mavenCentral()
+    maven {
+        url 'http://repo.jenkins-ci.org/releases/'
+    }
+}
+
+dependencies {
+    compile 'org.codehaus.groovy:groovy-all:2.4.10'
+    compile 'com.cloudbees:groovy-cps:1.24'
+    compile group: 'org.csanchez.jenkins.plugins', name: 'kubernetes', version: '1.7.0', ext: 'jar'
+}
+
+codenarc {
+    toolVersion = "1.1"
+}
+
+codenarcMain {
+    configFile = rootProject.file("config/codenarc/rules.groovy")
+}
+
+codenarcTest {
+    configFile = rootProject.file("config/codenarc/rules.groovy")
+}
