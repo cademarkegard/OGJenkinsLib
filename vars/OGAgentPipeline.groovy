@@ -13,8 +13,15 @@ def call(List<OGContainer> containers = [], List volumes = [], closure) {
     new OGAgentContainerImpl(this)
   ]
 
+  // we remove non-alphanumerics besides dashes to validate for k8s podname
+  def jobName = env.JOB_NAME.take(36).replaceAll(/[^a-zA-Z0-9-]/, "")
+
   def allVolumes = volumes + [[hostPath: OGConstants.DOCKER_SOCK_PATH, mountPath: OGConstants.DOCKER_SOCK_PATH]]
-  def name = "agentPod-${env.JOB_NAME}-${UUID.randomUUID().toString().substring(0,8)}".replace('/', '-')
+
+  // max length of the name can only be 63 characters
+  // jenkins/agent-pod-${jobName}-${uuid}
+  def name = "agentPod-${jobName}-${UUID.randomUUID().toString().take(8)}".replace('/', '-')
+
 
   OGPod.run(this, 'agentPod', name, name, allContainers, allVolumes, closure)
 }
